@@ -82,5 +82,7 @@
       }
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "@nestjs/mapped-types": "*"
+  }
 }
