@@ -1,38 +1,19 @@
 import { Route, Routes, Link } from 'react-router-dom';
+import Home from './pages/home';
+import Login from './pages/login';
+import Signup from './pages/signup';
+import NavBar from './components/navbar';
 
 export function App() {
   return (
-    <div>
-      <div role="navigation">
-        <ul className="flex p-4 items-center justify-between w-full border border-b-black">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
+    <>
+      <NavBar />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
