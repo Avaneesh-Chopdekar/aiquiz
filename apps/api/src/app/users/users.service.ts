@@ -34,12 +34,33 @@ export class UsersService {
       });
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.db
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        emailVerified: users.emailVerified,
+        role: users.role,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+      .from(users);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.db
+      .select({
+        id: users.id,
+        username: users.username,
+        email: users.email,
+        emailVerified: users.emailVerified,
+        role: users.role,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+      .from(users)
+      .where(eq(users.id, id));
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -58,7 +79,7 @@ export class UsersService {
       });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.db.delete(users).where(eq(users.id, id));
   }
 }
