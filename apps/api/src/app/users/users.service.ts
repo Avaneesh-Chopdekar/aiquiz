@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 
@@ -48,8 +48,8 @@ export class UsersService {
       .from(users);
   }
 
-  async findOne(id: string) {
-    return await this.db
+  async findById(id: string) {
+    const [user] = await this.db
       .select({
         id: users.id,
         username: users.username,
@@ -61,10 +61,22 @@ export class UsersService {
       })
       .from(users)
       .where(eq(users.id, id));
+
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  async findByEmail(id: string) {
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, id));
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return await this.db
+    const [user] = await this.db
       .update(users)
       .set(updateUserDto)
       .where(eq(users.id, id))
@@ -77,6 +89,8 @@ export class UsersService {
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
       });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   async remove(id: string) {
