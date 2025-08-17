@@ -68,8 +68,9 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@heroui/button": "^2.2.24",
     "@heroui/react": "^2.8.2",
+    "@heroui/system": "^2.4.20",
+    "@heroui/theme": "^2.4.20",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
