@@ -62,7 +62,6 @@ export class UsersService {
       .from(users)
       .where(eq(users.id, id));
 
-    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
@@ -71,7 +70,6 @@ export class UsersService {
       .select()
       .from(users)
       .where(eq(users.email, id));
-    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
@@ -89,7 +87,7 @@ export class UsersService {
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
       });
-    if (!user) throw new NotFoundException('User not found');
+
     return user;
   }
 
