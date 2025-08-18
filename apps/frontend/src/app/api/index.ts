@@ -4,54 +4,37 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
-
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let queue: { resolve: () => void; reject: (e: any) => void }[] = [];
 
-const processQueue = (
-  error: AxiosError | null,
-  token: string | null = null
-) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
+function flushQueue(error: any = null) {
+  queue.forEach((p) => (error ? p.reject(error) : p.resolve()));
+  queue = [];
+}
 
 api.interceptors.response.use(
-  (response) => response,
+  (r) => r,
   async (error: AxiosError) => {
-    const originalRequest: any = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const original: any = error.config;
+    if (error.response?.status === 401 && !original?._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => api(originalRequest))
-          .catch((err) => Promise.reject(err));
+          queue.push({ resolve: () => resolve(api(original)), reject });
+        });
       }
-
-      originalRequest._retry = true;
+      original._retry = true;
       isRefreshing = true;
-
       try {
         await api.post('/auth/refresh');
-
-        processQueue(null);
-        return api(originalRequest);
-      } catch (err) {
-        processQueue(err as AxiosError, null);
-        return Promise.reject(err);
+        flushQueue();
+        return api(original);
+      } catch (e) {
+        flushQueue(e);
+        return Promise.reject(e);
       } finally {
         isRefreshing = false;
       }
     }
-
     return Promise.reject(error);
   }
 );
