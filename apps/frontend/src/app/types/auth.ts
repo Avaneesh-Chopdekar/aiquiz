@@ -33,12 +33,16 @@ export const signupSchema = z
     path: ['confirmPassword'],
   });
 
-export type SignupSchema = z.infer<typeof signupSchema>;
-
 export const loginSchema = signupSchema.omit({
   username: true,
   confirmPassword: true,
   role: true,
 });
 
+export type SignupSchema = z.infer<typeof signupSchema>;
+
+export type SignupBody = Omit<SignupSchema, 'confirmPassword'>;
+
 export type LoginSchema = z.infer<typeof loginSchema>;
+
+export type CurrentUserResponse = { email: string };
