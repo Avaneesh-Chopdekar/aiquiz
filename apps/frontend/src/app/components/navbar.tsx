@@ -10,6 +10,7 @@ import {
   Button,
 } from '@heroui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store';
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -27,6 +28,8 @@ export default function NavBar() {
       href: '/signup',
     },
   ];
+
+  const { logout, status } = useAuthStore();
   return (
     <Navbar isBordered disableAnimation>
       <NavbarContent className="sm:hidden" justify="start">
@@ -61,18 +64,32 @@ export default function NavBar() {
         ))}
       </NavbarContent>
 
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link as={RouterLink} to="/login">
-            Login
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={RouterLink} to="/signup" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
+      {status === 'authenticated' ? (
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <Button
+              as={RouterLink}
+              onPress={async () => await logout()}
+              variant="flat"
+            >
+              Logout
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      ) : (
+        <NavbarContent justify="end">
+          <NavbarItem className="hidden lg:flex">
+            <Link as={RouterLink} to="/login">
+              Login
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Button as={RouterLink} to="/signup" variant="flat">
+              Sign Up
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+      )}
 
       <NavbarMenu>
         {menuItems.map((item, index) => (
