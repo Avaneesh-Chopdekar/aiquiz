@@ -36,4 +36,8 @@ export class AuthService {
     });
     return { access, refresh };
   }
+
+  async getCurrentUser(user: any) {
+    return await this.usersService.findById(user.userId);
+  }
 }

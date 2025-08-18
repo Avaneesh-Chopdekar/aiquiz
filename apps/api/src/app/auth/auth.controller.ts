@@ -50,8 +50,8 @@ export class AuthController {
 
   @UseGuards(JwtAccessGuard)
   @Get('me')
-  me(@Req() req: Request) {
-    return req.user;
+  async me(@Req() req: Request) {
+    return await this.authService.getCurrentUser(req.user as User);
   }
 
   @Post('refresh')
