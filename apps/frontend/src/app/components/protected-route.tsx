@@ -1,25 +1,29 @@
-import { Navigate } from 'react-router-dom';
-import type { PropsWithChildren } from 'react';
-import { Spinner } from '@heroui/react';
-import useAuth from '../hooks/use-auth';
+import { Navigate, useLocation } from 'react-router-dom';
+import { ReactNode } from 'react';
+import { useAuthStore } from '../store';
 
-export function ProtectedRoute({ children }: PropsWithChildren) {
-  const { user, loading } = useAuth();
+export function ProtectedRoute({
+  children,
+  role,
+}: {
+  children: ReactNode;
+  role?: 'STUDENT' | 'TEACHER' | 'ADMIN';
+}) {
+  const { user, status } = useAuthStore();
+  const location = useLocation();
 
-  if (loading) {
-    return (
-      <div className="flex h-screen justify-center items-center">
-        <Spinner
-          classNames={{ label: 'text-foreground mt-4' }}
-          label="Loading..."
-          variant="gradient"
-        />
-      </div>
-    );
+  console.log({ user, status });
+
+  if (status === 'unknown') {
+    return <div className="p-4 text-center">Loading…</div>;
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (status === 'unauthenticated' || !user) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (role && !(role === user.role)) {
+    return <Navigate to="/403" replace />;
   }
 
   return children;
