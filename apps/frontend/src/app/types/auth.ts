@@ -45,4 +45,14 @@ export type SignupBody = Omit<SignupSchema, 'confirmPassword'>;
 
 export type LoginSchema = z.infer<typeof loginSchema>;
 
-export type CurrentUserResponse = { email: string };
+export type UserResponse = {
+  id: string;
+  email: string;
+  username: string;
+  emailVerified: boolean;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AuthStatus = 'unknown' | 'authenticated' | 'unauthenticated';
