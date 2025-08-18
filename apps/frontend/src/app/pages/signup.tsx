@@ -46,19 +46,19 @@ export default function Signup() {
       password: data.password,
       role: data.role,
     });
-    console.table(res);
-    if (res.statusCode === 201) {
+    // console.table(res);
+    if (res.status === 201) {
       navigate('/login');
       addToast({
         title: 'Account created successfully',
         color: 'success',
       });
-    } else if (res.statusCode === 409) {
+    } else if (res.status === 409) {
       console.log({
-        title: res.message,
+        title: res.data.message,
         color: 'danger',
       });
-    } else if (res.statusCode === 500) {
+    } else if (res.status === 500) {
       addToast({
         title: 'Something went wrong',
         color: 'danger',
