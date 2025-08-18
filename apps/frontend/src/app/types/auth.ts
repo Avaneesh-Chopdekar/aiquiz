@@ -34,3 +34,11 @@ export const signupSchema = z
   });
 
 export type SignupSchema = z.infer<typeof signupSchema>;
+
+export const loginSchema = signupSchema.omit({
+  username: true,
+  confirmPassword: true,
+  role: true,
+});
+
+export type LoginSchema = z.infer<typeof loginSchema>;
