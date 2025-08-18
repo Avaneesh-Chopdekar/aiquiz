@@ -11,53 +11,19 @@ import {
   CardFooter,
   Divider,
   Link,
+  addToast,
 } from '@heroui/react';
-import { z } from 'zod';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link as RouterLink } from 'react-router-dom';
 import EyeSlashFilledIcon from '../components/icons/eye-slashed-filled-icon';
 import EyeFilledIcon from '../components/icons/eye-filled-icon';
-import { useState } from 'react';
+import { signupSchema, SignupSchema } from '../types/auth';
+import { signup } from '../api/auth';
 
 export default function Signup() {
-  const passwordSchema = z
-    .string()
-    .min(8, { error: 'Password must be at least 8 characters long.' })
-    .max(128, { error: 'Password must not exceed 128 characters.' })
-    .regex(/[a-z]/, {
-      error: 'Password must contain at least one lowercase letter.',
-    })
-    .regex(/[A-Z]/, {
-      error: 'Password must contain at least one uppercase letter.',
-    })
-    .regex(/\d/, { error: 'Password must contain at least one number.' })
-    .regex(/[!@#$%^&*(),.?":{}|<>]/, {
-      error: 'Password must contain at least one special character.',
-    });
-
-  const signupSchema = z
-    .object({
-      username: z
-        .string()
-        .min(3, { error: 'Username must be at least 3 characters long.' })
-        .max(50, { error: 'Username must not exceed 50 characters.' }),
-      email: z
-        .email()
-        .max(50, { error: 'Email must not exceed 50 characters.' }),
-      password: passwordSchema,
-      confirmPassword: passwordSchema,
-      role: z.enum(['STUDENT', 'TEACHER', 'ADMIN'], {
-        error: 'Please select a role.',
-      }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      error: 'Passwords do not match.',
-      path: ['confirmPassword'],
-    });
-
-  type SignupSchema = z.infer<typeof signupSchema>;
-
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -73,8 +39,31 @@ export default function Signup() {
     resolver: zodResolver(signupSchema),
   });
 
-  function onSubmit(data: SignupSchema) {
-    console.log(data);
+  async function onSubmit(data: SignupSchema) {
+    const res = await signup({
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    });
+    console.table(res);
+    if (res.statusCode === 201) {
+      navigate('/login');
+      addToast({
+        title: 'Account created successfully',
+        color: 'success',
+      });
+    } else if (res.statusCode === 409) {
+      console.log({
+        title: res.message,
+        color: 'danger',
+      });
+    } else if (res.statusCode === 500) {
+      addToast({
+        title: 'Something went wrong',
+        color: 'danger',
+      });
+    }
   }
 
   const [isVisible, setIsVisible] = useState(false);
@@ -141,9 +130,9 @@ export default function Signup() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      ) : (
                         <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                       )}
                     </button>
                   }
@@ -172,9 +161,9 @@ export default function Signup() {
                       onClick={toggleVisibility}
                     >
                       {isVisible ? (
-                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                      ) : (
                         <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                       )}
                     </button>
                   }
