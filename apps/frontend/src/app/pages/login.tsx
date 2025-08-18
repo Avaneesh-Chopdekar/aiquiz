@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import EyeSlashFilledIcon from '../components/icons/eye-slashed-filled-icon';
 import EyeFilledIcon from '../components/icons/eye-filled-icon';
 import { LoginSchema, loginSchema } from '../types/auth';
-import { login } from '../api/auth';
+import { useAuthStore } from '../store';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ export default function Login() {
     },
     resolver: zodResolver(loginSchema),
   });
+
+  const { login } = useAuthStore();
 
   async function onSubmit(data: LoginSchema) {
     const res = await login(data.email, data.password);
