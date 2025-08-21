@@ -6,6 +6,7 @@ import { DrizzleModule } from './drizzle/drizzle.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
+import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersService } from './users/users.service';
     DrizzleModule,
     UsersModule,
     AuthModule,
+    QuizModule,
   ],
   controllers: [AppController],
   providers: [AppService],
