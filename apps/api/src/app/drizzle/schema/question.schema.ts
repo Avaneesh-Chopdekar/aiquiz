@@ -13,7 +13,7 @@ export const questions = pgTable('questions', {
   id: uuid('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: uuid('user_id')
+  quizId: uuid('quiz_id')
     .notNull()
     .references(() => quizzes.id),
   text: varchar('title', { length: 255 }).notNull(),
