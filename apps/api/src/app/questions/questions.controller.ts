@@ -14,7 +14,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { JwtAccessGuard } from '../auth/guards/jwt-access.guard';
 
-@Controller('questions')
+@Controller('v1/questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 

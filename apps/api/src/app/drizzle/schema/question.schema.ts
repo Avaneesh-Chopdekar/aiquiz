@@ -9,6 +9,8 @@ import {
 import { quizzes } from './quiz.schema';
 import { sql } from 'drizzle-orm';
 
+// TODO: Add userId field to questions table
+
 export const questions = pgTable('questions', {
   id: uuid('id')
     .primaryKey()

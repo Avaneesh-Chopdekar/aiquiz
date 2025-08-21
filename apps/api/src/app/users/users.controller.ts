@@ -33,13 +33,6 @@ export class UsersController {
     return user;
   }
 
-  @Get(':email')
-  findByEmail(@Param('email') email: string) {
-    const user = this.usersService.findByEmail(email);
-    if (!user) throw new NotFoundException('User not found');
-    return user;
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = this.usersService.update(id, updateUserDto);

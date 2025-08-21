@@ -35,6 +35,7 @@ export class UpdateQuestionDto {
   @Max(3)
   correctOptionIndex?: number;
 
+  @IsOptional()
   @IsString()
   @IsUUID()
   quizId?: string;
